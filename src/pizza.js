@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as Yup from 'yup';
 
 export default function PizzaForm() {
 const [order, setOrder] = useState({name: "",size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: ""});
+const [error, setError] = useState({
+    name: ""
+});
 
-const handeChange = event => {
-    const {name, type, value, checked} = event.target;
-    const updatedInfo = type === "checkbox" ? checked: value;
-    setOrder({...order, [name]: updatedInfo});
-}
+
 
 const formSchema = Yup.object().shape({
     name: Yup
@@ -17,6 +16,24 @@ const formSchema = Yup.object().shape({
     .min(2, "name must be at least 2 characters")
 });
 
+useEffect(() => {
+    formSchema.isValid(order).then(valid => {
+        setButtonDisabled(!valid);
+    });
+}, [formState]);
+
+const validate = (name, value) => {
+  yup.reach(formSchema, name)
+    .validate(value)
+    .then(() => setError({...error, [name]: ""}))
+    .catch(err => setError({...error, [name]: err.error[0]}));
+}
+
+const handleChange = (name, value) => {
+    validate(name, value);
+    setOrder({...order, [name]: value});
+}
+   
     return(
         <form id = 'pizza-form' onSubmit={handleSubmit}>
           <div className = 'form-inputs'>
