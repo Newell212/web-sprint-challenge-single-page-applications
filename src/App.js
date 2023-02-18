@@ -1,10 +1,13 @@
 import React from "react";
 
+
 const App = () => {
   return (
     <>
-      <h1>Lambda Eats</h1>
-      <p>You can remove this code and create your own header</p>
+      <h1>Bloomtech Eats</h1>
+      <p>Use the button to start your order!</p>
+      <button id="order-pizza" onClick={event => window.location.href='/pizza'}>Click here to order!</button>
+      
     </>
   );
 };
