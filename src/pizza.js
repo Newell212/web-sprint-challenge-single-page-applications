@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import * as Yup from 'yup';
 
 export default function PizzaForm() {
 const [order, setOrder] = useState({name: "",size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: ""});
@@ -8,6 +9,13 @@ const handeChange = event => {
     const updatedInfo = type === "checkbox" ? checked: value;
     setOrder({...order, [name]: updatedInfo});
 }
+
+const formSchema = Yup.object().shape({
+    name: Yup
+    .string()
+    .required("Name is required")
+    .min(2, "name must be at least 2 characters")
+});
 
     return(
         <form id = 'pizza-form' onSubmit={handleSubmit}>
