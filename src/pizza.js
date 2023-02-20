@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import * as Yup from 'yup';
 
-export default function PizzaForm() {
+function PizzaForm() {
 const [order, setOrder] = useState({name: "",size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: ""});
 const [error, setError] = useState({
     name: ""
@@ -16,14 +16,10 @@ const formSchema = Yup.object().shape({
     .min(2, "name must be at least 2 characters")
 });
 
-useEffect(() => {
-    formSchema.isValid(order).then(valid => {
-        setButtonDisabled(!valid);
-    });
-}, [formState]);
+
 
 const validate = (name, value) => {
-  yup.reach(formSchema, name)
+  Yup.reach(formSchema, name)
     .validate(value)
     .then(() => setError({...error, [name]: ""}))
     .catch(err => setError({...error, [name]: err.error[0]}));
@@ -32,6 +28,11 @@ const validate = (name, value) => {
 const handleChange = (name, value) => {
     validate(name, value);
     setOrder({...order, [name]: value});
+}
+
+const handleSubmit = (e) => {
+    e.preventDefault();
+    submit();
 }
    
     return(
@@ -89,7 +90,12 @@ const handleChange = (name, value) => {
                     onChange={handleChange}
                     />
             </label> 
+            <label>
+                <button id="order-buttons" onClick={handleSubmit}>Add To Order</button>
+            </label>
             </div>  
         </form>
     )
 }
+
+export default PizzaForm;
