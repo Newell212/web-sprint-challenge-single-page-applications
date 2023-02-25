@@ -14,8 +14,9 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 
 function PizzaForm(props) {
-    const {values, update, style, submit, order} = props
-    const [formStyle, setFormStyle] = useState("hide-pizza-form")
+    const {values, update, submit,} = props;
+    const [formStyle, setFormStyle] = useState("hide-pizza-form");
+    const [selectValue, setSelectValue] = useState("");
 
     function showOrder() {
         // window.location.href='/pizza'
@@ -29,7 +30,8 @@ function PizzaForm(props) {
 
 const onChange = evt => {
     const name = evt.target.name;
-    const {value} = evt.target;
+    const value = evt.target.value;
+    setSelectValue(value);
     update(name, value);
 }
     
@@ -59,35 +61,45 @@ return(
             maxLength="30"
             />
         </label>
+        <div>
         <label>Size
-            <select value={values.size} id="size-dropdown" onChange={onChange}>
-            <option value="">--select a size--</option>
+            <select value={selectValue} id="size-dropdown" onChange={onChange}>
+            <option defaultValue disabled>--select a size--</option>
             <option value="MED">Medium</option>
             <option value="LAR">Large</option>
             <option value="XLAR">X-Large</option>
             </select>
         </label> 
+        </div>
         <label>Select Your Toppings
+        <div>
             Pepperoni
             <input
                 name="pepperoni"
                 type="checkbox"
                 />
+                </div>
+                <div>
                 Sausage
             <input
                 name="sausage"
                 type="checkbox"
                 />
+                </div>
+                <div>
                 Mushrooms
             <input
                 name="mushrooms"
                 type="checkbox"
                 />
+                </div>
+                <div>
                 Peppers
             <input
                 name="peppers"
                 type="checkbox"
-                />    
+                />  
+                </div>  
         </label>  
         <label>Special Instructions
             <input
