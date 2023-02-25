@@ -1,101 +1,116 @@
 import React, {useState, useEffect} from 'react';
 import * as Yup from 'yup';
-
-function PizzaForm() {
-const [order, setOrder] = useState({name: "",size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: ""});
-const [error, setError] = useState({
-    name: ""
-});
+import axios from '../package.json';
+import "./pizza.css";
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 
 
-const formSchema = Yup.object().shape({
-    name: Yup
-    .string()
-    .required("Name is required")
-    .min(2, "name must be at least 2 characters")
-});
 
 
 
-const validate = (name, value) => {
-  Yup.reach(formSchema, name)
-    .validate(value)
-    .then(() => setError({...error, [name]: ""}))
-    .catch(err => setError({...error, [name]: err.error[0]}));
+
+
+
+
+function PizzaForm(props) {
+    const {values, update, style, submit, order} = props
+    const [formStyle, setFormStyle] = useState("hide-pizza-form")
+
+    function showOrder() {
+        // window.location.href='/pizza'
+        console.log("showOrder clicked: " + `${formStyle }`);
+        if(formStyle === "show-pizza-form") {
+            setFormStyle("hide-pizza-form")
+        } else {
+            setFormStyle("show-pizza-form")
+        }
+      }
+
+const onChange = evt => {
+    const name = evt.target.name;
+    const {value} = evt.target;
+    update(name, value);
 }
-
-const handleChange = (name, value) => {
-    validate(name, value);
-    setOrder({...order, [name]: value});
-}
-
-const handleSubmit = (e) => {
+    
+const onSubmit = (e) => {
     e.preventDefault();
     submit();
 }
+
+return(
+    <>
+    <BrowserRouter>
    
-    return(
-        <form id = 'pizza-form' onSubmit={handleSubmit}>
-          <div className = 'form-inputs'>
-            <label>Name
-              <input
-                type="text"
-                name="name-input"
-                placeholder="your name here"
-                onChange={handleChange}
-                maxLength="30"
+        <nav>
+            <Link to="pizza" id="order-pizza" onClick={showOrder} >Click here to order!</Link>
+        </nav>
+        <Route>
+            <Route path="pizza" element={<PizzaForm />} />
+        </Route>
+    </BrowserRouter>
+    <form className={formStyle} id='pizza-form' onSubmit={onSubmit} >
+      <div className = 'form-inputs'>
+        <label>Name
+          <input
+            type="text"
+            name="name-input"
+            placeholder="your name here"
+            maxLength="30"
+            />
+        </label>
+        <label>Size
+            <select value={values.size} id="size-dropdown" onChange={onChange}>
+            <option value="">--select a size--</option>
+            <option value="MED">Medium</option>
+            <option value="LAR">Large</option>
+            <option value="XLAR">X-Large</option>
+            </select>
+        </label> 
+        <label>Select Your Toppings
+            Pepperoni
+            <input
+                name="pepperoni"
+                type="checkbox"
                 />
-            </label>
-            <label>Size
-                <select value={order.size} id="size-dropdown">
-                <option value="">--select a size--</option>
-                <option value="MED">Medium</option>
-                <option value="LAR">Large</option>
-                <option value="XLAR">X-Large</option>
-                </select>
-            </label> 
-            <label>Select Your Toppings
-                <input
-                    name="pepperoni"
-                    type="checkbox"
-                    checked="order.pepperoni"
-                    onChange={handleChange}
-                    />
-                <input
-                    name="sausage"
-                    type="checkbox"
-                    checked="order.sausage"
-                    onChange={handleChange}
-                    />
-                <input
-                    name="mushrooms"
-                    type="checkbox"
-                    checked="order.mushrooms"
-                    onChange={handleChange}
-                    />
-                <input
-                    name="peppers"
-                    type="checkbox"
-                    checked="order.peppers"
-                    onChange={handleChange}
-                    />    
-            </label>  
-            <label>Special Instructions
-                <input
-                    type="text"
-                    id="special-text"
-                    name="special"
-                    checked="order.special"
-                    onChange={handleChange}
-                    />
-            </label> 
-            <label>
-                <button id="order-buttons" onClick={handleSubmit}>Add To Order</button>
-            </label>
-            </div>  
-        </form>
-    )
-}
+                Sausage
+            <input
+                name="sausage"
+                type="checkbox"
+                />
+                Mushrooms
+            <input
+                name="mushrooms"
+                type="checkbox"
+                />
+                Peppers
+            <input
+                name="peppers"
+                type="checkbox"
+                />    
+        </label>  
+        <label>Special Instructions
+            <input
+                type="text"
+                id="special-text"
+                name="special"
+                />
+        </label> 
+        <label>
+            <button id="order-buttons" onClick={submit}>Add To Order</button>
+        </label>
+        </div>  
+    </form>
+    </>
+)
+};
+
+
+
+
+
+
+
+
 
 export default PizzaForm;
