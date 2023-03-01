@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import PizzaForm from "./pizza";
 import axios from 'axios';
-import "./App.css";     
+import "./App.css";
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 // create a 'pizza.js' that includes the form
 // create some kind of router '/' -> '/pizza'
@@ -11,73 +12,87 @@ import "./App.css";
 
 const initialFormValues = {
   name: "",
-  size: "", 
-  pepperoni: false, 
-  sausage: false, 
-  mushrooms: false, 
-  peppers: false, 
+  size: "",
+  pepperoni: false,
+  sausage: false,
+  mushrooms: false,
+  peppers: false,
   special: ""
 }
 
-const initialFormErrors ={
+const initialFormErrors = {
   name: ""
 }
 
 
-const App = () => {
-  
+export default function App() {
+
   const [order, setOrder] = useState(initialFormValues);
   const [error, setError] = useState(initialFormErrors);
 
 
   const handleSubmit = () => {
     const newestOrder = {
-        name: order.name,
-        size: order.size,
-        pepperoni: order.pepperoni,
-        sausage: order.sausage,
-        mushrooms: order.mushrooms,
-        peppers: order.peppers,
-        special: order.special
+      name: order.name,
+      size: order.size,
+      pepperoni: order.pepperoni,
+      sausage: order.sausage,
+      mushrooms: order.mushrooms,
+      peppers: order.peppers,
+      special: order.special
     }
-  
-    if(order.name.length < 2) {
+
+    if (order.name.length < 2) {
       setError("name must be at least 2 characters")
       alert(`${error}`)
     } else {
       axios.post("https://reqres.in/api/orders", newestOrder)
-        .then(res => { 
-     })
-         .catch(err => console.error(err))
+        .then(res => {
+        })
+        .catch(err => console.error(err))
     }
 
-    
+
   };
 
   const updateForm = (inputName, inputValue) => {
-    
-    setOrder({...order, [inputName]: inputValue})
+
+    setOrder({ ...order, [inputName]: inputValue })
   }
 
-  console.log(order);
+ function Pizza(props) {
+  return (
+    <div>
+    <PizzaForm
+      values={order}
+      update={updateForm}
+      submit={handleSubmit}
+    />
+
+  </div> 
+  )
+ }
 
   return (
     <>
-      <header>
-        <h1>Bloomtech Eats</h1>
-        <p>Use the button to start your order!</p>
-      </header>
-      
-      
-      <div>
-        <PizzaForm
-          values={order}
-          update={updateForm}
-          submit={handleSubmit}
-        />
 
-      </div> 
+        <BrowserRouter>
+          
+            <h1>Bloomtech Eats</h1>
+            <p>Use the button to start your order!</p>
+          
+        <nav>
+            <Link to='pizza' href="/pizza" id="order-pizza"  >Click here to order!</Link>
+        </nav>
+        <Routes>
+            <Route path="pizza" element={<Pizza />} />
+        </Routes>
+    </BrowserRouter>
+
+      
+      
+      
+     
     </>
   );
 };
-export default App;
