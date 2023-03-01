@@ -78,7 +78,7 @@ return(
     <BrowserRouter>
         
         <nav>
-            <Link to='pizza' href="/pizza" id="order-pizza" onClick={showOrder} >Click here to order!</Link>
+            <Link to='/pizza' href="/pizza" id="order-pizza" onClick={showOrder} >Click here to order!</Link>
         </nav>
         <Route>
             <Route path="pizza" element={<PizzaForm />} />
@@ -88,6 +88,7 @@ return(
       <div className = 'form-inputs'>
         <label>Name
           <input
+            id="name-input"
             type="text"
             name="name-input"
             placeholder="your name here"
