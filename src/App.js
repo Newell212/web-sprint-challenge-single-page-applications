@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PizzaForm from "./pizza";
 import axios from 'axios';
 import "./App.css";
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 
 // create a 'pizza.js' that includes the form
 // create some kind of router '/' -> '/pizza'
