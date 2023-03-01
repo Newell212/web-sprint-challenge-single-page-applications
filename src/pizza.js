@@ -11,6 +11,7 @@ const schema = yup.object().shape({
     mushrooms: yup.boolean(),
     peppers: yup.boolean(),
     special: yup.string(),
+    size: yup.string(),
 })
 
 function PizzaForm(props) {
@@ -23,7 +24,6 @@ function PizzaForm(props) {
 
 
     const setFormError = (name, value) => {
-        console.log(`name: ${name} value: ${value}`)
         yup.reach(schema, name).validate(value)
             .then(() => setError({ ...error, [name]: '' }))
             .catch(err => setError({ ...error, [name]: err.errors[0] }))
@@ -32,14 +32,13 @@ function PizzaForm(props) {
     const change = evt => {
         const { checked, value, name, type } = evt.target
         const valueToUse = type === 'checkbox' ? checked : value
-        console.log(evt)
-        setSelectSize(value.size)
         setFormError(name, valueToUse)
         setForm({ ...form, [name]: valueToUse })
     }
 
     const onSubmit = (e) => {
         e.preventDefault();
+        console.log(form);
         axios.post("https://reqres.in/api/orders", form)
             .then(res => {
             })
@@ -65,7 +64,7 @@ function PizzaForm(props) {
                     </label>
                     <div>
                         <label>Size
-                            <select value={selectSize} id="size-dropdown" onChange={change}>
+                            <select value={selectSize} id="size-dropdown" name="size" onChange={change}>
                                 <option defaultValue disabled>--select a size--</option>
                                 <option value="MED">Medium</option>
                                 <option value="LAR">Large</option>

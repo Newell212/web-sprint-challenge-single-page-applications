@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PizzaForm from "./pizza";
-import axios from 'axios';
 import "./App.css";
 import { Routes, Route, Link } from 'react-router-dom'
 
@@ -18,7 +17,7 @@ export default function App() {
   function Pizza(_props) {
     return (
       <div>
-        <PizzaForm/>
+        <PizzaForm />
       </div>
     )
   }
