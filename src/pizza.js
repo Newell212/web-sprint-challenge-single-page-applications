@@ -1,89 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import * as yup from 'yup';
-import axios from '../package.json';
+import axios from 'axios';
 import "./pizza.css";
 
 
 const schema = yup.object().shape({
-    user: yup.string().required().min(2, 'name must be at least 2 characters')
+    user: yup.string().required().min(2, 'name must be at least 2 characters'),
+    pepperoni: yup.boolean(),
+    sausage: yup.boolean(),
+    mushrooms: yup.boolean(),
+    peppers: yup.boolean(),
+    special: yup.string(),
 })
 
 function PizzaForm(props) {
     const { values, update, submit, } = props;
     const [selectSize, setSelectSize] = useState("");
     const [name, setName] = useState("");
-    const [error, setError] = useState({user: ''});
+    const [error, setError] = useState({ user: '' });
     const [disabled, setDisabled] = useState(true)
-    const [form, setForm] = useState({user: "", size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: ""})
+    const [form, setForm] = useState({ user: "", size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: "" })
 
 
     const setFormError = (name, value) => {
         console.log(`name: ${name} value: ${value}`)
         yup.reach(schema, name).validate(value)
-        .then(() => setError({...error, [name]: ''}))
-        .catch(err => setError({...error, [name]: err.errors[0]}))
+            .then(() => setError({ ...error, [name]: '' }))
+            .catch(err => setError({ ...error, [name]: err.errors[0] }))
     }
 
     const change = evt => {
-        const {checked, value, name, type} = evt.target
-        const valueToUse = type === 'checkbox' ? checked: value
+        const { checked, value, name, type } = evt.target
+        const valueToUse = type === 'checkbox' ? checked : value
         console.log(evt)
         setSelectSize(value.size)
         setFormError(name, valueToUse)
-        setForm({...form, [name]: valueToUse})
+        setForm({ ...form, [name]: valueToUse })
     }
-
-
-    // const onChangeSize = evt => {
-    //     values.size = evt.target.value;
-    //     setSelectSize(values.size);
-    // }
-
-    // const onChangeName = evt => {
-    //     values.name = evt.target.value
-    //     setFormError(name, valueToUse)
-    //     setName(values.name);
-    // }
-
-    // const onChangePep = evt => {
-    //     values.pepperoni = evt.target.value
-    //     setPepperoni(true)
-    // }
-
-    // const onChangeSaus = evt => {
-    //     values.sausage = evt.target.value
-    //     setSausage(true)
-    // }
-
-    // const onChangeMush = evt => {
-    //     values.mushrooms = evt.target.value
-    //     setMushrooms(true)
-    // }
-
-    // const onChangePeppers = evt => {
-    //     values.peppers = evt.target.value
-    //     setPeppers(true)
-    // }
-
-    // const onChangeSpecial = evt => {
-    //     values.special = evt.target.value
-    //     setSpecial(values.special)
-    // }
 
     const onSubmit = (e) => {
         e.preventDefault();
-        submit();
+        axios.post("https://reqres.in/api/orders", form)
+            .then(res => {
+            })
+            .catch(err => console.error(err))
     }
-
-    useEffect(() => {
-        schema.isValid(name).then(valid => setDisabled(!valid))
-    }, [name])
 
     return (
         <>
-            <form id='pizza-form' onSubmit={onSubmit} >
+            <form id='pizza-form' >
                 <div className='form-inputs'>
-                    <div style={{color: 'red'}}>
+                    <div style={{ color: 'red' }}>
                         <div>{error.user}</div>
                     </div>
                     <label>Name
@@ -145,24 +112,16 @@ function PizzaForm(props) {
                             type="text"
                             id="special-text"
                             name="special"
-                            onChange={change }
+                            onChange={change}
                         />
                     </label>
                     <label>
-                        <button type="submit" id="order-buttons" onClick={submit}>Add To Order</button>
+                        <button type="submit" id="order-buttons" onClick={onSubmit}>Add To Order</button>
                     </label>
                 </div>
             </form>
         </>
     )
 };
-
-
-
-
-
-
-
-
 
 export default PizzaForm;
