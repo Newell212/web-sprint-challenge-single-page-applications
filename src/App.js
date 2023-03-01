@@ -80,7 +80,7 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
+    <>
       <h1>Bloomtech Eats</h1>
 
       <nav>
@@ -91,6 +91,6 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="pizza" element={<Pizza />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 };
