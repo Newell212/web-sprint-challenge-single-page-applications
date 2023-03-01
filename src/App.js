@@ -60,39 +60,30 @@ export default function App() {
     setOrder({ ...order, [inputName]: inputValue })
   }
 
- function Pizza(props) {
+  function Pizza(props) {
+    return (
+      <div>
+        <PizzaForm
+          values={order}
+          update={updateForm}
+          submit={handleSubmit}
+        />
+
+      </div>
+    )
+  }
+
   return (
-    <div>
-    <PizzaForm
-      values={order}
-      update={updateForm}
-      submit={handleSubmit}
-    />
-
-  </div> 
-  )
- }
-
-  return (
-    <>
-
-        <BrowserRouter>
-          
-            <h1>Bloomtech Eats</h1>
-            <p>Use the button to start your order!</p>
-          
+      <BrowserRouter>
+        <h1>Bloomtech Eats</h1>
+        <p>Use the button to start your order!</p>
         <nav>
-            <Link to='pizza' href="/pizza" id="order-pizza"  >Click here to order!</Link>
+          <Link to='pizza' href="/pizza" id="order-pizza"  >Click here to order!</Link>
         </nav>
-        <Routes>
-            <Route path="pizza" element={<Pizza />} />
-        </Routes>
-    </BrowserRouter>
 
-      
-      
-      
-     
-    </>
+        <Routes>
+          <Route path="pizza" element={<Pizza />} />
+        </Routes>
+      </BrowserRouter>
   );
 };
