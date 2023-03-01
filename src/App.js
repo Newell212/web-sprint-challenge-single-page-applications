@@ -60,7 +60,13 @@ export default function App() {
     setOrder({ ...order, [inputName]: inputValue })
   }
 
-  function Pizza(props) {
+  function Home(_props) {
+    return (
+      <p>Use the button to start your order!</p>
+    )
+  }
+
+  function Pizza(_props) {
     return (
       <div>
         <PizzaForm
@@ -74,16 +80,17 @@ export default function App() {
   }
 
   return (
-      <BrowserRouter>
-        <h1>Bloomtech Eats</h1>
-        <p>Use the button to start your order!</p>
-        <nav>
-          <Link to='pizza' href="/pizza" id="order-pizza"  >Click here to order!</Link>
-        </nav>
+    <BrowserRouter>
+      <h1>Bloomtech Eats</h1>
 
-        <Routes>
-          <Route path="pizza" element={<Pizza />} />
-        </Routes>
-      </BrowserRouter>
+      <nav>
+        <Link to='pizza' href="/pizza" id="order-pizza"  >Click here to order!</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="pizza" element={<Pizza />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
