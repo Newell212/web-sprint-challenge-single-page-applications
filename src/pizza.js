@@ -37,7 +37,7 @@ function PizzaForm(props) {
     }
 
     const onSubmit = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         console.log(form);
         axios.post("https://reqres.in/api/orders", form)
             .then(res => {
