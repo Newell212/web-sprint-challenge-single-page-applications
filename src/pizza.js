@@ -1,83 +1,104 @@
 import React, { useState, useEffect } from 'react';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import axios from '../package.json';
 import "./pizza.css";
+
+
+const schema = yup.object().shape({
+    user: yup.string().required().min(2, 'name must be at least 2 characters')
+})
 
 function PizzaForm(props) {
     const { values, update, submit, } = props;
     const [selectSize, setSelectSize] = useState("");
     const [name, setName] = useState("");
-    const [pepperoni, setPepperoni] = useState(false);
-    const [sausage, setSausage] = useState(false);
-    const [mushrooms, setMushrooms] = useState(false);
-    const [peppers, setPeppers] = useState(false);
-    const [special, setSpecial] = useState("");
-    const [newOrder, setNewOrder] = useState([]);
+    const [error, setError] = useState({user: ''});
+    const [disabled, setDisabled] = useState(true)
+    const [form, setForm] = useState({user: "", size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: ""})
 
 
-
-
-    const onChangeSize = evt => {
-        values.size = evt.target.value;
-        setSelectSize(values.size);
+    const setFormError = (name, value) => {
+        console.log(`name: ${name} value: ${value}`)
+        yup.reach(schema, name).validate(value)
+        .then(() => setError({...error, [name]: ''}))
+        .catch(err => setError({...error, [name]: err.errors[0]}))
     }
 
-    const onChangeName = evt => {
-        values.name = evt.target.value
-        setName(values.name);
-    }
-
-    const onChangePep = evt => {
-        values.pepperoni = evt.target.value
-        setPepperoni(true)
-    }
-
-    const onChangeSaus = evt => {
-        values.sausage = evt.target.value
-        setSausage(true)
-    }
-
-    const onChangeMush = evt => {
-        values.mushrooms = evt.target.value
-        setMushrooms(true)
-    }
-
-    const onChangePeppers = evt => {
-        values.peppers = evt.target.value
-        setPeppers(true)
-    }
-
-    const onChangeSpecial = evt => {
-        values.special = evt.target.value
-        setSpecial(values.special)
+    const change = evt => {
+        const {checked, value, name, type} = evt.target
+        const valueToUse = type === 'checkbox' ? checked: value
+        console.log(evt)
+        setSelectSize(value.size)
+        setFormError(name, valueToUse)
+        setForm({...form, [name]: valueToUse})
     }
 
 
+    // const onChangeSize = evt => {
+    //     values.size = evt.target.value;
+    //     setSelectSize(values.size);
+    // }
+
+    // const onChangeName = evt => {
+    //     values.name = evt.target.value
+    //     setFormError(name, valueToUse)
+    //     setName(values.name);
+    // }
+
+    // const onChangePep = evt => {
+    //     values.pepperoni = evt.target.value
+    //     setPepperoni(true)
+    // }
+
+    // const onChangeSaus = evt => {
+    //     values.sausage = evt.target.value
+    //     setSausage(true)
+    // }
+
+    // const onChangeMush = evt => {
+    //     values.mushrooms = evt.target.value
+    //     setMushrooms(true)
+    // }
+
+    // const onChangePeppers = evt => {
+    //     values.peppers = evt.target.value
+    //     setPeppers(true)
+    // }
+
+    // const onChangeSpecial = evt => {
+    //     values.special = evt.target.value
+    //     setSpecial(values.special)
+    // }
 
     const onSubmit = (e) => {
         e.preventDefault();
         submit();
     }
 
-
+    useEffect(() => {
+        schema.isValid(name).then(valid => setDisabled(!valid))
+    }, [name])
 
     return (
         <>
             <form id='pizza-form' onSubmit={onSubmit} >
                 <div className='form-inputs'>
+                    <div style={{color: 'red'}}>
+                        <div>{error.user}</div>
+                    </div>
                     <label>Name
                         <input
                             id="name-input"
                             type="text"
-                            name="name-input"
+                            name="user"
                             placeholder="your name here"
                             maxLength="30"
-                            onChange={onChangeName}
+                            onChange={change}
                         />
                     </label>
                     <div>
                         <label>Size
-                            <select value={selectSize} id="size-dropdown" onChange={onChangeSize}>
+                            <select value={selectSize} id="size-dropdown" onChange={change}>
                                 <option defaultValue disabled>--select a size--</option>
                                 <option value="MED">Medium</option>
                                 <option value="LAR">Large</option>
@@ -91,7 +112,7 @@ function PizzaForm(props) {
                             <input
                                 name="pepperoni"
                                 type="checkbox"
-                                onChange={onChangePep}
+                                onChange={change}
                             />
                         </div>
                         <div>
@@ -99,7 +120,7 @@ function PizzaForm(props) {
                             <input
                                 name="sausage"
                                 type="checkbox"
-                                onChange={onChangeSaus}
+                                onChange={change}
                             />
                         </div>
                         <div>
@@ -107,7 +128,7 @@ function PizzaForm(props) {
                             <input
                                 name="mushrooms"
                                 type="checkbox"
-                                onChange={onChangeMush}
+                                onChange={change}
                             />
                         </div>
                         <div>
@@ -115,7 +136,7 @@ function PizzaForm(props) {
                             <input
                                 name="peppers"
                                 type="checkbox"
-                                onChange={onChangePeppers}
+                                onChange={change}
                             />
                         </div>
                     </label>
@@ -124,7 +145,7 @@ function PizzaForm(props) {
                             type="text"
                             id="special-text"
                             name="special"
-                            onChange={onChangeSpecial}
+                            onChange={change }
                         />
                     </label>
                     <label>

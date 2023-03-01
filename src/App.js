@@ -44,7 +44,6 @@ export default function App() {
 
     if (order.name.length < 2) {
       setError("name must be at least 2 characters")
-      alert(`${error}`)
     } else {
       axios.post("https://reqres.in/api/orders", newestOrder)
         .then(res => {
@@ -83,14 +82,14 @@ export default function App() {
     <>
       <h1>Bloomtech Eats</h1>
 
-      <nav>
-        <Link to='pizza' href="/pizza" id="order-pizza"  >Click here to order!</Link>
-      </nav>
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="pizza" element={<Pizza />} />
       </Routes>
+
+      <nav>
+        <Link to='pizza' href="/pizza" id="order-pizza"  >Click here to order!</Link>
+      </nav>
     </>
   );
 };
