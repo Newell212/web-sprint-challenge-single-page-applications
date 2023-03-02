@@ -21,7 +21,7 @@ function PizzaForm(props) {
     const [error, setError] = useState({ user: '' });
     const [disabled, setDisabled] = useState(true)
     const [form, setForm] = useState({ user: "", size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: "" })
-
+    const [post, setPost] = useState([]);
 
     const setFormError = (name, value) => {
         yup.reach(schema, name).validate(value)
@@ -37,7 +37,7 @@ function PizzaForm(props) {
     }
 
     const onSubmit = (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         console.log(form);
         axios.post(`https://reqres.in/api/orders`, form)
             .then(res => {
