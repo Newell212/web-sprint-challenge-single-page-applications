@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import axios from 'axios';
-import "./pizza.css";
-
 
 const schema = yup.object().shape({
     user: yup.string().required().min(2, 'name must be at least 2 characters'),
@@ -15,7 +13,6 @@ const schema = yup.object().shape({
 })
 
 function PizzaForm(props) {
-    const { values, update, submit, } = props;
     const [selectSize, setSelectSize] = useState("");
     const [name, setName] = useState("");
     const [error, setError] = useState({ user: '' });
@@ -38,17 +35,19 @@ function PizzaForm(props) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(form);
-        axios.post(`https://reqres.in/api/orders`, form)
+        const newOrder = {user: form.user.trim(), size: form.size, pepperoni: form.pepperoni, sausage: form.sausage, mushrooms: form.mushrooms, peppers: form.peppers, special: form.special.trim()}
+        axios.post("https://reqres.in/api/orders", newOrder)
             .then(res => {
-                setPost(res.data);
+               setForm({user: "", size: "", pepperoni: false, sausage: false, mushrooms: false, peppers: false, special: "" })
             })
-            .catch(err => console.error(err))
+            .catch(err => {
+                debugger
+            })
     }
 
     return (
         <>
-            <form id='pizza-form' >
+            <form id='pizza-form' onSubmit={onSubmit}>
                 <div className='form-inputs'>
                     <div style={{ color: 'red' }}>
                         <div>{error.user}</div>
@@ -65,7 +64,7 @@ function PizzaForm(props) {
                     </label>
                     <div>
                         <label>Size
-                            <select value={selectSize} id="size-dropdown" name="size" onChange={change}>
+                            <select  id="size-dropdown" name="size" onChange={change}>
                                 <option defaultValue disabled>--select a size--</option>
                                 <option value="MED">Medium</option>
                                 <option value="LAR">Large</option>
@@ -116,7 +115,7 @@ function PizzaForm(props) {
                         />
                     </label>
                     <label>
-                        <button type="submit" id="order-buttons" onClick={onSubmit}>Add To Order</button>
+                        <button type="submit" id="order-button" onClick={onSubmit}>Add To Order</button>
                     </label>
                 </div>
             </form>
